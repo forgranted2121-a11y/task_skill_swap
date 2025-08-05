@@ -96,9 +96,11 @@ class RequestListView(LoginRequiredMixin, ListView):
     context_object_name = 'requests'
     
     def get_queryset(self):
+        # Show both sent and received requests for "All Requests" view
+        from django.db.models import Q
         return SkillSwapRequest.objects.filter(
-            requester=self.request.user
-        ).select_related('recipient', 'offered_skill')
+            Q(requester=self.request.user) | Q(recipient=self.request.user)
+        ).select_related('recipient', 'offered_skill', 'requester').order_by('-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

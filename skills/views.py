@@ -64,12 +64,12 @@ class SkillListView(ListView):
         context['show_skills_grid'] = show_skills_grid
         
         if show_trending:
-            # Get trending skills based on most offered skills (limited to 15)
+            # Get trending skills based on most offered skills (limited to 10)
             trending_skills = (Skill.objects
                               .filter(category__is_active=True)
                               .annotate(offered_count=Count('offered_by_users'))
                               .filter(offered_count__gt=0)
-                              .order_by('-offered_count', 'name')[:15])
+                              .order_by('-offered_count', 'name')[:10])
             context['trending_skills'] = trending_skills
         
         # If showing skills grid, get teachers for the filtered skills
