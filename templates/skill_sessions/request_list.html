@@ -75,12 +75,22 @@
                                 <div class="flex items-start gap-4">
                                     <!-- User Avatar -->
                                     <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                                        {% if request.recipient.profile.profile_picture %}
-                                            <img src="{{ request.recipient.profile.profile_picture.url }}" 
-                                                 alt="{{ request.recipient.username }}" 
-                                                 class="w-12 h-12 rounded-full object-cover">
+                                        {% if request.requester == user %}
+                                            {% if request.recipient.profile.profile_picture %}
+                                                <img src="{{ request.recipient.profile.profile_picture.url }}" 
+                                                     alt="{{ request.recipient.username }}" 
+                                                     class="w-12 h-12 rounded-full object-cover">
+                                            {% else %}
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            {% endif %}
                                         {% else %}
-                                            <i class="fas fa-user text-gray-600"></i>
+                                            {% if request.requester.profile.profile_picture %}
+                                                <img src="{{ request.requester.profile.profile_picture.url }}" 
+                                                     alt="{{ request.requester.username }}" 
+                                                     class="w-12 h-12 rounded-full object-cover">
+                                            {% else %}
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                     
@@ -100,11 +110,19 @@
                                         </div>
                                         
                                                                 <p class="text-gray-600 mb-2">
-                            <i class="fas fa-arrow-right text-blue-500 mr-2"></i>
-                            To: <a href="{% url 'accounts:profile_details' request.recipient.id %}" 
-                                   class="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors">
-                                {{ request.recipient.get_full_name|default:request.recipient.username }}
-                            </a>
+                            {% if request.requester == user %}
+                                <i class="fas fa-arrow-right text-blue-500 mr-2"></i>
+                                To: <a href="{% url 'accounts:profile_details' request.recipient.id %}" 
+                                       class="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                                    {{ request.recipient.get_full_name|default:request.recipient.username }}
+                                </a>
+                            {% else %}
+                                <i class="fas fa-arrow-left text-green-500 mr-2"></i>
+                                From: <a href="{% url 'accounts:profile_details' request.requester.id %}" 
+                                         class="font-medium text-green-600 hover:text-green-800 hover:underline transition-colors">
+                                    {{ request.requester.get_full_name|default:request.requester.username }}
+                                </a>
+                            {% endif %}
                         </p>
                                         
                                         {% if request.message %}
@@ -127,7 +145,13 @@
                             <!-- Request Actions and Info -->
                             <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col items-end gap-2">
                                 <div class="text-sm text-gray-500 text-right">
-                                    <div>Sent {{ request.created_at|timesince }} ago</div>
+                                    <div>
+                                        {% if request.requester == user %}
+                                            Sent {{ request.created_at|timesince }} ago
+                                        {% else %}
+                                            Received {{ request.created_at|timesince }} ago
+                                        {% endif %}
+                                    </div>
                                     {% if request.expires_at %}
                                         <div class="text-orange-600">
                                             Expires {{ request.expires_at|timeuntil }}
@@ -142,10 +166,17 @@
                                     </a>
                                     
                                     {% if request.status == 'pending' %}
-                                        <a href="{% url 'skill_sessions:request_cancel' request.pk %}" 
-                                           class="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors">
-                                            <i class="fas fa-times mr-1"></i>Cancel
-                                        </a>
+                                        {% if request.requester == user %}
+                                            <a href="{% url 'skill_sessions:request_cancel' request.pk %}" 
+                                               class="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors">
+                                                <i class="fas fa-times mr-1"></i>Cancel
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'skill_sessions:request_respond' request.pk %}" 
+                                               class="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors">
+                                                <i class="fas fa-check mr-1"></i>Respond
+                                            </a>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
