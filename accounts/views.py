@@ -48,7 +48,38 @@ class RegisterView(CreateView):
             bio=bio,
             availability=availability
         )
-        messages.success(self.request, 'Registration successful! Please log in.')
+        
+        # Send welcome email to personal email
+        send_mail(
+            'Welcome to Campus Skill-Swap!',
+            f'''Dear {form.instance.first_name},
+
+Welcome to Campus Skill-Swap! We're excited to have you join our community of learners and teachers.
+
+Your account has been successfully created with username: {form.instance.username}
+
+Campus Skill-Swap is a platform where students can share their skills and learn from each other. You can:
+- Offer skills you're good at to help others
+- Request to learn skills from other students
+- Schedule and manage learning sessions
+- Build a community of knowledge sharing
+
+Get started by:
+1. Logging in to your account
+2. Adding skills you want to offer
+3. Browsing skills you want to learn
+4. Connecting with other students
+
+Thank you for joining our platform. Happy learning!
+
+Best regards,
+The Campus Skill-Swap Team''',
+            settings.DEFAULT_FROM_EMAIL,
+            [form.instance.email],
+            fail_silently=False,
+        )
+        
+        messages.success(self.request, 'Registration successful! A welcome email has been sent to your personal email address. Please log in.')
         return response
 
 
@@ -72,6 +103,11 @@ class ProfileView(LoginRequiredMixin, DetailView):
         profile = self.get_object()
         context['completion_percentage'] = profile.get_completion_percentage()
         context['is_own_profile'] = profile.user == self.request.user
+        
+        # Import and use get_user_statistics for dynamic stats
+        from skill_sessions.views import get_user_statistics
+        context.update(get_user_statistics(profile.user))
+        
         return context
 
 

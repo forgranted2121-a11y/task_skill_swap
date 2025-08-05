@@ -163,6 +163,8 @@ REST_FRAMEWORK = {
 
 # Email settings (for university email validation)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Campus Skill-Swap <noreply@campusskillswap.com>'
+EMAIL_SUBJECT_PREFIX = '[Campus Skill-Swap] '
 
 # Login URLs
 LOGIN_URL = '/accounts/login/'

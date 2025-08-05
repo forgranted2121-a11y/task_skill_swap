@@ -873,7 +873,7 @@ class SessionManagementView(LoginRequiredMixin, ListView):
         ).select_related('skill', 'teacher', 'learner', 'request')
         
         # Categorize sessions
-        completed_sessions = all_sessions.filter(status='completed')
+        completed_sessions = all_sessions.filter(status='completed').order_by('-ended_at', '-scheduled_date')
         ongoing_sessions = all_sessions.filter(status='in_progress')
         upcoming_sessions = all_sessions.filter(status='scheduled', scheduled_date__gt=timezone.now())
         
