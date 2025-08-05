@@ -267,12 +267,9 @@
                                     </span>
                                     
                                     {% if request.status == 'pending' %}
-                                    <form method="post" action="{% url 'skill_sessions:request_cancel' request.pk %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors mb-2" onclick="return confirm('Are you sure you want to cancel this request?')">
-                                            <i class="fas fa-ban mr-2"></i>Cancel
-                                        </button>
-                                    </form>
+                                    <a href="{% url 'skill_sessions:request_reject' request.pk %}?action=cancel" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors mb-2 inline-block text-center text-decoration-none">
+                                        <i class="fas fa-ban mr-2"></i>Cancel
+                                    </a>
                                     {% endif %}
                                     
                                     <a href="{% url 'skill_sessions:request_detail' request.pk %}" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors inline-block text-center text-decoration-none">

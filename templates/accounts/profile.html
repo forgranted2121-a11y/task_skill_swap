@@ -177,20 +177,28 @@
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Activity Stats</h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Skills Shared</span>
+                            <span class="text-gray-600">Skills Offered</span>
                             <span class="font-semibold text-blue-600">{{ profile.user.offered_skills.count }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Skills Completed</span>
+                            <span class="text-gray-600">Skills Desired</span>
                             <span class="font-semibold text-green-600">{{ profile.user.desired_skills.count }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">Sessions Taught</span>
-                            <span class="font-semibold text-purple-600">{{ profile.total_sessions_taught }}</span>
+                            <span class="font-semibold text-purple-600">{{ teaching_completed_count|default:0 }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">Sessions Learned</span>
-                            <span class="font-semibold text-orange-600">{{ profile.total_sessions_learned }}</span>
+                            <span class="font-semibold text-orange-600">{{ learning_completed_count|default:0 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Total Sessions</span>
+                            <span class="font-semibold text-indigo-600">{{ total_sessions|default:0 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Pending Requests</span>
+                            <span class="font-semibold text-yellow-600">{{ pending_requests_count|default:0 }}</span>
                         </div>
                         {% if profile.average_rating_as_teacher > 0 %}
                             <div class="flex justify-between items-center">

@@ -207,10 +207,10 @@ class PasswordResetRequestForm(forms.Form):
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(
-        label="University Email",
+        label="Personal Email",
         widget=forms.EmailInput(attrs={
             'class': 'form-control text-lg py-3 px-4 h-14 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 w-full bg-white',
-            'placeholder': 'Enter your university email',
+            'placeholder': 'Enter personal email id',
             'autocomplete': 'email',
             'required': True,
         })
